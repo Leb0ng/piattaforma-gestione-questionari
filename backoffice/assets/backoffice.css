@@ -1,0 +1,274 @@
+/* =====================================================================
+   BACK OFFICE - impaginazione
+   I componenti (pulsanti, campi, schede...) stanno in ../stile/css/stile.css.
+   Qui c'e' solo quello che riguarda la struttura delle pagine del Back Office.
+   ===================================================================== */
+
+/* ---------- struttura: menu a sinistra + contenuto ---------- */
+body.bo {
+  display: grid;
+  grid-template-columns: 264px minmax(0, 1fr);
+  min-height: 100vh;
+  /* la colonna del menu e' disegnata anche come sfondo: cosi resta piena
+     fino in fondo anche nelle pagine piu lunghe dello schermo */
+  background: linear-gradient(to right, var(--fondo-scuro) 263px, var(--linea-tenue) 263px, var(--linea-tenue) 264px, var(--fondo) 264px);
+}
+
+.bo-menu {
+  position: sticky; top: 0; z-index: 1;
+  height: 100vh;
+  display: flex; flex-direction: column; gap: 2.5rem;
+  padding: 1.75rem 1.25rem 1.5rem;
+  /* vetro scuro: sotto si vedono passare l'aurora e la costellazione */
+  background: rgba(7, 11, 28, 0.55);
+  -webkit-backdrop-filter: var(--sfocatura); backdrop-filter: var(--sfocatura);
+  border-right: 1px solid var(--linea-tenue);
+}
+
+.bo-nav { display: flex; flex-direction: column; gap: 0.25rem; }
+.bo-nav a {
+  position: relative;
+  padding: 0.65rem 0.85rem 0.65rem 1.1rem;
+  color: var(--testo-2);
+  font-weight: 500;
+  text-decoration: none;
+  border-radius: var(--raggio-s);
+  transition: background var(--rapido) var(--curva), color var(--rapido) var(--curva);
+}
+.bo-nav a::before {
+  content: '';
+  position: absolute; left: 0; top: 50%;
+  width: 3px; height: 0;
+  background: var(--accento);
+  box-shadow: 0 0 10px var(--accento);
+  border-radius: 3px;
+  transform: translateY(-50%);
+  transition: height var(--medio) var(--curva);
+}
+.bo-nav a:hover { color: var(--testo); background: var(--vetro); }
+.bo-nav a[aria-current="page"] { color: var(--testo); background: var(--vetro); }
+.bo-nav a[aria-current="page"]::before { height: 1.2rem; }
+
+.bo-utente {
+  margin-top: auto;
+  display: flex; align-items: flex-end; justify-content: space-between; gap: 0.75rem;
+  padding-top: 1.25rem;
+  border-top: 1px solid var(--linea-tenue);
+}
+.bo-utente p { line-height: 1.35; }
+
+.bo-main {
+  position: relative;
+  padding: clamp(1.5rem, 4vw, 3.5rem);
+  overflow: hidden;
+}
+/* la costellazione riempie tutto lo sfondo della finestra ("fixed":
+   resta ferma mentre il contenuto scorre). Il menu ha z-index 1 per restarle sopra. */
+.bo-decoro {
+  position: fixed; inset: 0;
+  width: 100%; height: 100%;
+  pointer-events: none;
+}
+.bo-colonna {
+  position: relative;
+  max-width: 1040px;
+  display: flex; flex-direction: column; gap: 2rem;
+}
+.bo-piede { margin-top: 2rem; padding-top: 1.25rem; border-top: 1px solid var(--linea-tenue); }
+
+/* fascia dei numeri */
+.cifre {
+  display: grid; grid-template-columns: repeat(4, minmax(0, 1fr));
+  margin: 0;
+  border-top: 1px solid var(--linea-tenue);
+  border-bottom: 1px solid var(--linea-tenue);
+}
+.cifre > div { padding: 1.25rem 1.25rem 1.25rem 0; }
+.cifre > div + div { padding-left: 1.25rem; border-left: 1px solid var(--linea-tenue); }
+.cifre dd {
+  margin: 0;
+  font-family: var(--font-titoli);
+  font-size: 2.6rem; font-weight: 600; line-height: 1;
+  letter-spacing: -0.03em;
+}
+.cifre dt { margin-top: 0.5rem; font-size: 0.9rem; color: var(--testo-2); }
+
+/* filtri per stato */
+.filtri { display: flex; gap: 0.5rem; flex-wrap: wrap; }
+.filtro {
+  min-height: 36px; padding: 0.3rem 0.95rem;
+  font: inherit; font-size: 0.9rem; font-weight: 500;
+  color: var(--testo-2); background: transparent;
+  border: 1px solid var(--linea); border-radius: 999px;
+  cursor: pointer;
+  transition: all var(--rapido) var(--curva);
+}
+.filtro:hover { color: var(--testo); border-color: var(--testo-3); }
+.filtro[aria-pressed="true"] { color: var(--su-accento); background: var(--testo); border-color: var(--testo); }
+
+.tabella td .titolo-riga + .piccolo { display: block; }
+.tabella-vuota { padding: 1.5rem 1.25rem; }
+/* righe che entrano/escono quando si filtra */
+.tabella tbody tr.nascosta { display: none; }
+.tabella tbody tr.entra { animation: riga-entra var(--medio) var(--curva) both; }
+@keyframes riga-entra { from { opacity: 0; transform: translateY(8px); } }
+
+/* percorso Bozza -> Pubblicato -> Chiuso */
+.percorso {
+  display: grid; grid-template-columns: repeat(3, minmax(0, 1fr));
+  margin: 0; padding: 0; list-style: none;
+  counter-reset: tappa;
+}
+.percorso li {
+  position: relative;
+  display: flex; flex-direction: column; gap: 0.2rem;
+  padding: 1.1rem 1rem 0 0;
+  border-top: 2px solid var(--linea);
+}
+.percorso li::before {
+  content: '';
+  position: absolute; top: -7px; left: 0;
+  width: 12px; height: 12px; border-radius: 50%;
+  background: var(--fondo);
+  border: 2px solid var(--linea);
+}
+.percorso li.fatta { border-top-color: var(--accento); }
+.percorso li.fatta::before { background: var(--accento); border-color: var(--accento); }
+.percorso li.attuale::before { border-color: var(--accento); box-shadow: 0 0 0 5px var(--accento-velo); }
+.percorso li.futura b { color: var(--testo-3); font-weight: 500; }
+
+/* scheda delle azioni di stato */
+.azioni-stato { display: flex; align-items: center; justify-content: space-between; gap: 1.5rem; flex-wrap: wrap; }
+.azioni-stato > div:first-child { display: flex; flex-direction: column; gap: 0.5rem; max-width: 52ch; }
+.lista-problemi { margin: 0; padding-left: 1.1rem; color: var(--ambra); }
+.lista-problemi li + li { margin-top: 0.25rem; }
+
+/* form */
+fieldset.gruppo { margin: 0; padding: 0; border: 0; min-width: 0; }
+fieldset.gruppo legend { padding: 0; margin-bottom: 0.45rem; }
+.campo textarea.basso { min-height: 5.5rem; }
+
+.righe-opzioni { display: flex; flex-direction: column; gap: 0.5rem; margin: 0; padding: 0; list-style: none; }
+.riga-opzione { display: flex; align-items: center; gap: 0.5rem; }
+.riga-opzione .input { flex: 1; }
+/* una riga appena aggiunta si "apre", una tolta si "chiude" */
+.riga-opzione.entra { animation: opzione-entra var(--medio) var(--curva) both; }
+.riga-opzione.esce { animation: opzione-esce var(--rapido) var(--curva) both; }
+@keyframes opzione-entra { from { opacity: 0; transform: translateY(-8px); } }
+@keyframes opzione-esce { to { opacity: 0; transform: translateX(12px); } }
+
+/* ---------- destinatari dei questionari ---------- */
+.destinatari { display: flex; flex-direction: column; gap: 1rem; margin-top: 0.4rem; }
+.destinatari-gruppo { display: flex; flex-direction: column; gap: 0.45rem; }
+.destinatari-nome { font-size: 0.85rem; font-weight: 600; color: var(--testo-3); }
+/* tessere piu piccole: qui ci sono solo nomi brevi, senza spiegazione */
+.tessere-compatte { grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 0.5rem; }
+.tessere-compatte .tessera span { padding: 0.6rem 0.85rem; }
+
+.destinatari-riepilogo { display: flex; align-items: center; justify-content: space-between; gap: 1rem 1.5rem; flex-wrap: wrap; }
+.destinatari-riepilogo > div { display: flex; flex-direction: column; gap: 0.6rem; }
+.destinatari-filtri { display: flex; flex-wrap: wrap; gap: 0.4rem; margin: 0; padding: 0; list-style: none; }
+.destinatari-conta { display: flex; flex-direction: column; align-items: flex-end; text-align: right; }
+.destinatari-conta b { font-family: var(--font-titoli); font-size: 2.2rem; font-weight: 600; line-height: 1; letter-spacing: -0.03em; }
+.destinatari-avviso { flex-basis: 100%; }
+
+/* nelle tabelle: seconda riga piccola sotto il valore */
+.cella-destinatari .piccolo, .cella-sotto { display: block; }
+
+/* ---------- dashboard ---------- */
+.cifre-sotto { display: block; margin-top: 0.15rem; font-size: 0.8rem; color: var(--testo-3); }
+
+/* elenco "da fare": ogni voce e' un avviso colorato in base all'urgenza */
+.da-fare { display: flex; flex-direction: column; gap: 0.6rem; margin: 0; padding: 0; list-style: none; }
+.da-fare .avviso > div { display: flex; flex-direction: column; gap: 0.15rem; }
+.da-fare a { color: var(--testo); font-weight: 600; text-decoration: none; }
+.da-fare a:hover { color: var(--accento); }
+.da-fare-testo { font-size: 0.925rem; }
+
+/* due schede affiancate, una sotto l'altra su schermi stretti */
+.dash-griglia { display: grid; grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr); gap: 1.25rem; align-items: start; }
+.dash-testa { display: flex; align-items: baseline; justify-content: space-between; gap: 1rem; }
+.dash-testa > :last-child { flex-shrink: 0; white-space: nowrap; }
+.dash-testa a { color: var(--accento); text-decoration: none; }
+.dash-testa a:hover { text-decoration: underline; }
+
+/* avanzamento dei questionari aperti */
+.avanzamenti { display: flex; flex-direction: column; gap: 1.1rem; margin: 0; padding: 0; list-style: none; }
+.avanzamenti li { display: flex; flex-direction: column; gap: 0.4rem; }
+.avanzamento-testa { display: flex; align-items: baseline; justify-content: space-between; gap: 1rem; }
+.avanzamento-testa .titolo-riga { color: var(--testo); font-weight: 600; text-decoration: none; }
+.avanzamento-testa .titolo-riga:hover { color: var(--accento); }
+
+/* barre in SVG: la lunghezza la decide PHP (attributo width), qui solo colori e animazione */
+.barra { display: block; width: 100%; height: 6px; overflow: visible; }
+.barra-binario { fill: var(--incavo); }
+.barra-pieno { fill: var(--accento); }
+.barra-pieno, .barra-web, .barra-mobile { transform-box: fill-box; transform-origin: left; animation: barra-cresce var(--lento) var(--curva) both; }
+@keyframes barra-cresce { from { transform: scaleX(0); } }
+
+/* grafico a colonne delle compilazioni per giorno */
+.grafico { margin: 0; display: flex; flex-direction: column; gap: 0.4rem; }
+.grafico svg { display: block; width: 100%; height: auto; }
+.colonna { fill: var(--accento); transform-box: fill-box; transform-origin: bottom; animation: colonna-sale var(--lento) var(--curva) both; transition: fill var(--rapido) var(--curva); }
+.colonna:hover { fill: var(--accento-forte); }
+.colonna-vuota { fill: var(--linea); }
+@keyframes colonna-sale { from { transform: scaleY(0); } }
+.grafico-assi { display: flex; justify-content: space-between; }
+
+/* canale web / mobile */
+.canali { gap: 0.6rem; padding-top: 1rem; border-top: 1px solid var(--linea-tenue); }
+.canali h3 { margin: 0; font-weight: 600; color: var(--testo-2); }
+.barra-canali { height: 8px; border-radius: 4px; overflow: hidden; }
+.barra-web { fill: var(--accento); }
+.barra-mobile { fill: var(--menta); }
+.legenda { display: flex; flex-wrap: wrap; gap: 0.4rem 1.25rem; margin: 0; padding: 0; list-style: none; color: var(--testo-2); }
+.legenda li { display: flex; align-items: center; gap: 0.45rem; }
+.legenda b { color: var(--testo); }
+.punto { width: 9px; height: 9px; border-radius: 50%; }
+.punto-web { background: var(--accento); }
+.punto-mobile { background: var(--menta); }
+
+/* ---------- statistiche di un questionario ---------- */
+.stat-domande { display: flex; flex-direction: column; gap: 1rem; margin: 0; padding: 0; list-style: none; }
+.stat-testa { display: flex; gap: 1rem; align-items: flex-start; }
+.stat-testa h3 { margin: 0 0 0.2rem; }
+.barra-top { fill: var(--menta); }
+.stat-citazioni { display: flex; flex-direction: column; gap: 0.5rem; margin: 0; padding: 0; list-style: none; }
+.stat-citazioni li { padding: 0.7rem 1rem; border-left: 2px solid var(--accento); background: var(--incavo); border-radius: 0 var(--raggio-s) var(--raggio-s) 0; color: var(--testo-2); }
+.stat-gruppi { border-top: 1px solid var(--linea-tenue); padding-top: 0.9rem; }
+.stat-gruppi summary { cursor: pointer; font-weight: 600; color: var(--accento); }
+.stat-gruppi summary:hover { color: var(--accento-forte); }
+.stat-gruppi[open] summary { margin-bottom: 0.9rem; }
+.stat-gruppi .tabella-wrap { margin-bottom: 0.6rem; }
+
+/* ---------- schermi stretti ---------- */
+@media (max-width: 900px) {
+  body.bo { display: block; background: var(--fondo); }
+  .bo-menu {
+    position: sticky; z-index: 20;
+    height: auto;
+    flex-direction: row; align-items: center; flex-wrap: wrap; gap: 0.75rem 1.25rem;
+    padding: 0.85rem 1.25rem;
+    border-right: 0; border-bottom: 1px solid var(--linea-tenue);
+  }
+  .bo-nav { flex-direction: row; order: 3; width: 100%; overflow-x: auto; }
+  .bo-nav a { white-space: nowrap; padding: 0.45rem 0.85rem; }
+  .bo-nav a::before { display: none; }
+  .bo-utente { margin: 0 0 0 auto; padding: 0; border: 0; align-items: center; }
+  .bo-utente p { display: none; }
+
+  .bo-decoro { opacity: 0.7; }
+
+  .cifre { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .cifre > div:nth-child(3) { padding-left: 0; border-left: 0; }
+  .cifre > div:nth-child(n+3) { border-top: 1px solid var(--linea-tenue); }
+  .cifre dd { font-size: 2.1rem; }
+
+  .percorso { grid-template-columns: 1fr; gap: 0; }
+  .percorso li { padding: 0 0 1.1rem 1.5rem; border-top: 0; border-left: 2px solid var(--linea); }
+  .percorso li::before { top: 0; left: -7px; }
+  .percorso li.fatta { border-left-color: var(--accento); }
+
+  .dash-griglia { grid-template-columns: 1fr; }
+
+}

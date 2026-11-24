@@ -1,0 +1,23 @@
+# ---------------------------------------------------------------
+# Configurazione delle API
+# ---------------------------------------------------------------
+
+# porta su cui rispondono le API -> http://localhost:8080/api/...
+server:
+  port: 8080
+
+spring:
+  application:
+    name: questionari-api
+
+  # collegamento a MySQL di MAMP (porta 8889, NON la 3306 standard)
+  datasource:
+    url: jdbc:mysql://127.0.0.1:8889/questionari_pw?serverTimezone=Europe/Rome
+    username: root
+    password: root
+
+  # le tabelle le crea lo script database/schema.sql, Hibernate non deve toccarle
+  jpa:
+    hibernate:
+      ddl-auto: none
+    open-in-view: false

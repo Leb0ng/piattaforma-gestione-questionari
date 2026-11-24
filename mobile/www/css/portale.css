@@ -1,0 +1,166 @@
+/* =====================================================================
+   PORTALE WEB e APP MOBILE - impaginazione
+   I componenti stanno in ../stile/css/stile.css (condiviso col Back Office).
+   Questo file e' pensato prima per il telefono e poi allargato per il
+   computer: le stesse pagine girano nel browser e dentro l'app Cordova.
+   ===================================================================== */
+
+body.portale {
+  display: flex; flex-direction: column;
+  min-height: 100vh;
+  /* spazio per la tacca e i bordi arrotondati dei telefoni */
+  padding: env(safe-area-inset-top, 0) env(safe-area-inset-right, 0) 0 env(safe-area-inset-left, 0);
+}
+
+/* ---------- testata con menu ---------- */
+.p-testata {
+  position: sticky; top: 0; z-index: 20;
+  display: flex; align-items: center; gap: 1rem 2rem;
+  padding: 0.85rem clamp(1rem, 4vw, 2.5rem);
+  background: rgba(11, 16, 38, 0.55);
+  -webkit-backdrop-filter: var(--sfocatura); backdrop-filter: var(--sfocatura);
+  border-bottom: 1px solid var(--linea-tenue);
+}
+.p-menu { display: flex; gap: 0.25rem; }
+.p-menu a {
+  position: relative;
+  padding: 0.5rem 0.9rem;
+  color: var(--testo-2); font-weight: 500; text-decoration: none;
+  border-radius: var(--raggio-btn);
+  transition: color var(--rapido) var(--curva), background var(--rapido) var(--curva);
+}
+.p-menu a:hover { color: var(--testo); }
+.p-menu a[aria-current="page"] { color: var(--testo); background: var(--vetro-forte); }
+.p-utente { margin-left: auto; display: flex; align-items: center; gap: 0.75rem; }
+
+/* ---------- contenuto ---------- */
+.p-main {
+  position: relative; flex: 1;
+  padding: clamp(1.5rem, 5vw, 3.5rem) clamp(1rem, 4vw, 2.5rem);
+  overflow: hidden;
+}
+/* la costellazione riempie tutto lo sfondo della finestra.
+   E' "fixed": resta ferma mentre il contenuto scorre sopra, e sta dietro a
+   tutto perche' le parti della pagina (colonna, testata, piede) sono
+   posizionate e vengono dopo nell'HTML. */
+.p-decoro {
+  position: fixed; inset: 0;
+  width: 100%; height: 100%;
+  pointer-events: none;
+}
+.p-colonna {
+  position: relative;
+  max-width: 760px; margin: 0 auto;
+  display: flex; flex-direction: column; gap: 1.75rem;
+}
+.p-piede {
+  position: relative; /* resta sopra alla decorazione dello sfondo */
+  padding: 1.25rem clamp(1rem, 4vw, 2.5rem) calc(1.25rem + env(safe-area-inset-bottom, 0));
+  border-top: 1px solid var(--linea-tenue);
+  text-align: center;
+}
+
+/* ---------- schede dei questionari ---------- */
+.schede { display: flex; flex-direction: column; gap: 0.9rem; }
+.q-scheda { display: flex; align-items: center; justify-content: space-between; gap: 1.25rem; flex-wrap: wrap; }
+.q-testo { display: flex; flex-direction: column; gap: 0.5rem; flex: 1 1 260px; min-width: 0; }
+.q-testo h2 { overflow-wrap: anywhere; }
+/* la descrizione si ferma a tre righe, il resto si legge aprendo il questionario */
+.q-descrizione { display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+
+.q-fatti { display: flex; flex-direction: column; margin: 0; padding: 0; list-style: none; }
+.q-fatti li {
+  display: flex; align-items: center; justify-content: space-between; gap: 1rem;
+  padding: 0.8rem 0;
+  border-bottom: 1px solid var(--linea-tenue);
+  color: var(--testo-2);
+}
+
+/* ---------- compilazione ---------- */
+.domanda-form .domanda-corpo { flex: 1; }
+.domanda-form.con-errore { border-color: rgba(255, 163, 154, 0.6); }
+
+.scelte { display: flex; flex-direction: column; gap: 0.5rem; }
+.voce-scelta {
+  position: relative;
+  display: flex; align-items: flex-start; gap: 0.75rem;
+  padding: 0.8rem 1rem;
+  border: 1px solid var(--linea);
+  border-radius: var(--raggio-m);
+  cursor: pointer;
+  transition: border-color var(--rapido) var(--curva), background var(--rapido) var(--curva);
+}
+.voce-scelta:hover { border-color: var(--testo-3); }
+.voce-scelta input { position: absolute; opacity: 0; }
+/* il cerchio (o il quadrato) disegnato a mano al posto di quello del browser */
+.voce-scelta i {
+  flex: none;
+  width: 1.15rem; height: 1.15rem; margin-top: 0.18rem;
+  border: 1.5px solid var(--testo-3);
+  border-radius: 50%;
+  transition: border-color var(--rapido) var(--curva), background var(--rapido) var(--curva), transform var(--medio) var(--curva);
+}
+.voce-scelta input[type="checkbox"] + i { border-radius: 5px; }
+.voce-scelta input:checked + i {
+  border-color: var(--accento); background: var(--accento);
+  box-shadow: inset 0 0 0 3px var(--pieno);
+  transform: scale(1.08);
+}
+.voce-scelta:has(input:checked) { border-color: var(--accento); background: var(--accento-velo); }
+.voce-scelta input:focus-visible + i { outline: 2px solid var(--accento); outline-offset: 3px; }
+.voce-scelta span { overflow-wrap: anywhere; }
+
+/* barra di avanzamento, resta visibile mentre si scorre */
+.avanzamento {
+  position: sticky; top: 4.25rem; z-index: 10;
+  display: flex; align-items: center; gap: 1rem;
+  padding: 0.7rem 1rem;
+  background: rgba(27, 36, 68, 0.72);
+  -webkit-backdrop-filter: var(--sfocatura); backdrop-filter: var(--sfocatura);
+  border: 1px solid var(--linea);
+  border-radius: 999px;
+}
+.avanzamento-barra { flex: 1; height: 6px; background: var(--incavo); border-radius: 999px; overflow: hidden; }
+.avanzamento-barra i {
+  display: block; height: 100%;
+  background: var(--accento);
+  border-radius: inherit;
+  transform: scaleX(0); transform-origin: left;
+  transition: transform var(--lento) var(--curva);
+}
+.avanzamento p { white-space: nowrap; }
+
+/* conferma di avvenuto salvataggio */
+.fatto { display: flex; flex-direction: column; align-items: flex-start; gap: 0.9rem; padding: 2rem; }
+.fatto:not([hidden]) { animation: fatto-entra var(--lento) var(--curva) both; }
+@keyframes fatto-entra { from { opacity: 0; transform: translateY(18px) scale(0.98); } }
+/* la spunta si "disegna": prima il cerchio, poi il segno */
+.spunta { fill: none; stroke: var(--menta); stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round; }
+.spunta circle { stroke-dasharray: 176; stroke-dashoffset: 176; }
+.spunta path { stroke-dasharray: 40; stroke-dashoffset: 40; }
+.fatto:not([hidden]) .spunta circle { animation: disegna 700ms var(--curva) 150ms forwards; }
+.fatto:not([hidden]) .spunta path { animation: disegna 450ms var(--curva) 700ms forwards; }
+@keyframes disegna { to { stroke-dashoffset: 0; } }
+
+/* ---------- schermi stretti (telefono e app) ---------- */
+@media (max-width: 640px) {
+  /* niente sfocatura sulla testata: un elemento con backdrop-filter diventa il
+     "contenitore" degli elementi fixed al suo interno, e il menu in basso
+     resterebbe incollato alla testata invece che al fondo dello schermo */
+  .p-testata { flex-wrap: wrap; row-gap: 0.6rem; background: var(--fondo-scuro); -webkit-backdrop-filter: none; backdrop-filter: none; }
+  .p-nome { display: none; }
+  /* il menu scende in una barra fissa in basso, come nelle app */
+  .p-menu {
+    position: fixed; z-index: 30; left: 0; right: 0; bottom: 0;
+    justify-content: space-around;
+    padding: 0.5rem 0.75rem calc(0.5rem + env(safe-area-inset-bottom, 0));
+    background: rgba(7, 11, 28, 0.94);
+    -webkit-backdrop-filter: blur(14px); backdrop-filter: blur(14px);
+    border-top: 1px solid var(--linea-tenue);
+  }
+  .p-menu a { flex: 1; text-align: center; }
+  .p-piede { padding-bottom: calc(5rem + env(safe-area-inset-bottom, 0)); }
+  .avanzamento { top: 4rem; }
+  .q-scheda .btn { width: 100%; }
+  .fatto .gruppo-btn, .fatto .gruppo-btn .btn { width: 100%; }
+}

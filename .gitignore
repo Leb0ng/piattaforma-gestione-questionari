@@ -1,0 +1,17 @@
+# macOS
+.DS_Store
+
+# Java / Maven (si ricrea con mvn spring-boot:run)
+api/target/
+
+# Cordova (si ricrea con npm install e cordova platform add android)
+mobile/node_modules/
+mobile/platforms/
+mobile/plugins/
+
+# Editor / IDE
+.idea/
+.vscode/
+.classpath
+.project
+.settings/

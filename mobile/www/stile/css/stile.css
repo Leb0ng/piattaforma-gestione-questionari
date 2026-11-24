@@ -1,0 +1,607 @@
+/* =====================================================================
+   STILE CONDIVISO - tema "Vetro"
+   Schede di vetro sfocato su uno sfondo blu notte: dietro ci sono tre
+   luci colorate che si muovono piano (l'"aurora") e una costellazione
+   animata disegnata da animazioni.js.
+   Questo file e' usato da Back Office, portale web e app mobile:
+   cosi le tre interfacce hanno lo stesso aspetto e i componenti
+   (pulsanti, campi, schede, badge...) sono scritti una volta sola.
+   ===================================================================== */
+
+/* ---------- FONT (inclusi nel progetto, niente chiamate a Google) ---------- */
+@font-face {
+  font-family: 'Plus Jakarta Sans';
+  font-style: normal;
+  font-weight: 200 800;
+  font-display: swap;
+  src: url('../font/plus-jakarta-sans-latin-wght-normal.woff2') format('woff2-variations');
+}
+
+/* ---------- VARIABILI: tutta la palette e le misure stanno qui ---------- */
+:root {
+  /* sfondo: blu notte. "fondo-scuro" e' la versione piu profonda (menu, pagina di accesso) */
+  --fondo: #0b1026;
+  --fondo-scuro: #070b1c;
+
+  /* il "vetro": bianco quasi trasparente, sotto si intravede lo sfondo sfocato */
+  --vetro: rgba(255, 255, 255, 0.07);
+  --vetro-forte: rgba(255, 255, 255, 0.13);
+  --sfocatura: blur(16px);
+  /* lo stesso colore del vetro ma "pieno": serve dove la trasparenza darebbe
+     fastidio (finestra di conferma, toast, l'anellino delle opzioni scelte) */
+  --pieno: #1b2444;
+  /* "incavo": le zone scavate nel vetro (campi dei form, binari delle barre) */
+  --incavo: rgba(4, 8, 24, 0.45);
+  --linea: rgba(255, 255, 255, 0.18);
+  --linea-tenue: rgba(255, 255, 255, 0.1);
+
+  /* testi */
+  --testo: #f2f5ff;
+  --testo-2: #c9d0ea;
+  --testo-3: #a6afd2;
+
+  /* accento (azzurro) e il testo che ci va sopra */
+  --accento: #8ab4ff;
+  --accento-forte: #b4d0ff;
+  --accento-velo: rgba(138, 180, 255, 0.14);
+  --su-accento: #0b1026;
+  /* il bagliore dei pulsanti al passaggio del mouse */
+  --bagliore: 0 0 0 1px var(--accento-forte), 0 0 30px rgba(138, 180, 255, 0.6);
+  --bagliore-tenue: 0 0 0 1px var(--accento-forte), 0 0 22px rgba(138, 180, 255, 0.4);
+
+  /* colori di stato */
+  --menta: #7fe3c4;
+  --menta-velo: rgba(127, 227, 196, 0.12);
+  --ambra: #f2c078;
+  --ambra-velo: rgba(242, 192, 120, 0.12);
+  --cielo: #a3c4ff;
+  --cielo-velo: rgba(163, 196, 255, 0.12);
+  --corallo: #ffa39a;
+  --corallo-velo: rgba(255, 163, 154, 0.12);
+
+  /* tipografia: un solo font per titoli e testo, cambia il peso */
+  --font-titoli: 'Plus Jakarta Sans', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  --font-testo: 'Plus Jakarta Sans', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+
+  /* forme */
+  --raggio-s: 10px;
+  --raggio-m: 14px;
+  --raggio-l: 22px;
+  --raggio-btn: 12px;
+
+  /* movimento: una sola curva e poche durate, cosi tutto si muove "allo stesso modo" */
+  --curva: cubic-bezier(0.2, 0.7, 0.2, 1);
+  --rapido: 160ms;
+  --medio: 320ms;
+  --lento: 720ms;
+}
+
+/* ---------- BASE ---------- */
+*, *::before, *::after { box-sizing: border-box; }
+
+/* l'attributo hidden deve nascondere sempre, anche gli elementi a cui do display:flex */
+[hidden] { display: none !important; }
+
+html {
+  color-scheme: dark;
+  -webkit-text-size-adjust: 100%;
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  font-family: var(--font-testo);
+  font-size: 1rem;
+  line-height: 1.55;
+  color: var(--testo);
+  background: var(--fondo);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ---------- AURORA: le luci colorate dietro al vetro ----------
+   Tre sfumature rotonde (azzurro, lilla, verde acqua) disegnate su body::before.
+   E' "fixed", quindi resta ferma mentre la pagina scorre, e ha z-index -1
+   per stare dietro a tutto. Si sposta e ruota lentissima, avanti e indietro. */
+body::before {
+  content: '';
+  position: fixed; inset: -20%; z-index: -1;
+  background:
+    radial-gradient(40% 35% at 20% 20%, rgba(138, 180, 255, 0.3), transparent 70%),
+    radial-gradient(35% 30% at 85% 35%, rgba(194, 155, 255, 0.26), transparent 70%),
+    radial-gradient(40% 30% at 55% 85%, rgba(90, 220, 210, 0.17), transparent 70%);
+  animation: aurora 18s ease-in-out infinite alternate;
+  pointer-events: none;
+}
+@keyframes aurora { to { transform: translate(4%, -3%) rotate(6deg) scale(1.08); } }
+
+h1, h2, h3 {
+  font-family: var(--font-titoli);
+  font-weight: 600;
+  line-height: 1.1;
+  letter-spacing: -0.025em;
+  margin: 0;
+  text-wrap: balance;
+}
+h1 { font-size: clamp(2rem, 1.4rem + 2.2vw, 2.9rem); }
+h2 { font-size: 1.5rem; }
+h3 { font-size: 1.15rem; letter-spacing: -0.015em; }
+
+p { margin: 0; }
+a { color: var(--accento); text-decoration-thickness: 1px; text-underline-offset: 3px; }
+a:hover { color: var(--accento-forte); }
+
+::selection { background: var(--accento); color: var(--su-accento); }
+
+/* il contorno quando ci si muove con la tastiera: sempre visibile */
+:focus-visible {
+  outline: 2px solid var(--accento);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
+.tenue { color: var(--testo-2); }
+.piccolo { font-size: 0.875rem; }
+.numeri { font-variant-numeric: tabular-nums; }
+.solo-lettori {
+  position: absolute; width: 1px; height: 1px; overflow: hidden;
+  clip-path: inset(50%); white-space: nowrap;
+}
+
+/* ---------- PULSANTI ---------- */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  min-height: 44px;
+  padding: 0.6rem 1.15rem;
+  font: inherit;
+  font-weight: 600;
+  line-height: 1.2;
+  color: var(--testo);
+  background: transparent;
+  border: 1px solid var(--linea);
+  border-radius: var(--raggio-btn);
+  text-decoration: none;
+  cursor: pointer;
+  -webkit-backdrop-filter: var(--sfocatura); backdrop-filter: var(--sfocatura);
+  transition: background var(--rapido) var(--curva), border-color var(--rapido) var(--curva),
+              color var(--rapido) var(--curva), transform var(--rapido) var(--curva),
+              box-shadow var(--medio) var(--curva);
+}
+/* al passaggio del mouse il pulsante si "accende": bordo azzurro + bagliore intorno */
+.btn:hover { background: var(--vetro-forte); border-color: var(--accento-forte); color: var(--accento-forte); box-shadow: var(--bagliore-tenue); }
+.btn:active { transform: scale(0.97); }
+
+.btn-primario {
+  color: var(--su-accento);
+  background: var(--accento);
+  border-color: var(--accento);
+}
+.btn-primario:hover { background: var(--accento-forte); border-color: var(--accento-forte); color: var(--su-accento); box-shadow: var(--bagliore); }
+
+.btn-pericolo { color: var(--corallo); border-color: rgba(255, 163, 154, 0.45); }
+.btn-pericolo:hover { background: var(--corallo-velo); border-color: var(--corallo); color: var(--corallo); box-shadow: 0 0 0 1px var(--corallo), 0 0 22px rgba(255, 163, 154, 0.4); }
+
+.btn-piccolo { min-height: 36px; padding: 0.35rem 0.85rem; font-size: 0.875rem; }
+.btn-icona { min-height: 36px; width: 36px; padding: 0; }
+.btn[disabled] { opacity: 0.45; cursor: not-allowed; }
+
+/* ---------- CAMPI DEI FORM ---------- */
+.campo { display: flex; flex-direction: column; gap: 0.45rem; }
+.campo > label, .etichetta { font-size: 0.9rem; font-weight: 600; color: var(--testo-2); }
+.campo .aiuto { font-size: 0.85rem; color: var(--testo-3); }
+
+.input, .campo input[type="text"], .campo input[type="password"], .campo input[type="date"], .campo select, .campo textarea {
+  width: 100%;
+  padding: 0.75rem 0.95rem;
+  font: inherit;
+  color: var(--testo);
+  background: var(--incavo);
+  border: 1px solid var(--linea);
+  border-radius: var(--raggio-s);
+  transition: border-color var(--rapido) var(--curva), box-shadow var(--rapido) var(--curva);
+}
+.campo textarea { min-height: 7.5rem; resize: vertical; }
+.input:hover, .campo input:hover, .campo textarea:hover { border-color: var(--testo-3); }
+.input:focus, .campo input:focus, .campo textarea:focus {
+  outline: none;
+  border-color: var(--accento);
+  box-shadow: 0 0 0 4px var(--accento-velo);
+}
+::placeholder { color: var(--testo-3); opacity: 1; }
+.campo input:disabled { color: var(--testo-3); cursor: not-allowed; }
+/* data e menu a tendina: calendario e lista del sistema in versione scura */
+.campo input[type="date"], .campo select { color-scheme: dark; min-height: 48px; }
+/* menu a tendina con la freccia disegnata (quella del browser cambia da sistema a sistema) */
+.campo select {
+  -webkit-appearance: none; appearance: none;
+  padding-right: 2.5rem;
+  cursor: pointer;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath d='M2.5 4.5 6 8l3.5-3.5' fill='none' stroke='%23c9d0ea' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 0.95rem center;
+}
+.campo select:hover { border-color: var(--testo-3); }
+.campo select:focus { outline: none; border-color: var(--accento); box-shadow: 0 0 0 4px var(--accento-velo); }
+.campo [aria-invalid="true"] { border-color: var(--corallo); }
+/* due campi affiancati, uno sotto l'altro sugli schermi stretti */
+.griglia-2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1.25rem; }
+
+/* scelta a "tessere" (usata per la tipologia di domanda) */
+.tessere { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 0.75rem; }
+.tessera { position: relative; }
+.tessera input { position: absolute; opacity: 0; inset: 0; }
+.tessera span {
+  display: flex; flex-direction: column; gap: 0.2rem;
+  height: 100%;
+  padding: 0.9rem 1rem;
+  border: 1px solid var(--linea);
+  border-radius: var(--raggio-m);
+  cursor: pointer;
+  transition: border-color var(--rapido) var(--curva), background var(--rapido) var(--curva);
+}
+.tessera span b { font-weight: 600; }
+.tessera span small { color: var(--testo-3); font-size: 0.85rem; }
+.tessera span:hover { border-color: var(--testo-3); }
+.tessera input:checked + span { border-color: var(--accento); background: var(--accento-velo); }
+.tessera input:focus-visible + span { outline: 2px solid var(--accento); outline-offset: 3px; }
+
+/* interruttore si/no */
+.interruttore { display: inline-flex; align-items: center; gap: 0.75rem; cursor: pointer; }
+.interruttore input { position: absolute; opacity: 0; }
+.interruttore i {
+  position: relative; flex: none;
+  width: 46px; height: 26px;
+  background: var(--incavo);
+  border: 1px solid var(--linea);
+  border-radius: 999px;
+  transition: background var(--medio) var(--curva), border-color var(--medio) var(--curva);
+}
+.interruttore i::after {
+  content: ''; position: absolute; top: 3px; left: 3px;
+  width: 18px; height: 18px; border-radius: 50%;
+  background: var(--testo-3);
+  transition: transform var(--medio) var(--curva), background var(--medio) var(--curva);
+}
+.interruttore input:checked + i { background: var(--accento-velo); border-color: var(--accento); }
+.interruttore input:checked + i::after { transform: translateX(20px); background: var(--accento); }
+.interruttore input:focus-visible + i { outline: 2px solid var(--accento); outline-offset: 3px; }
+
+/* ---------- SCHEDE ---------- */
+.scheda {
+  position: relative;
+  padding: 1.5rem;
+  background: var(--vetro);
+  border: 1px solid var(--linea);
+  border-radius: var(--raggio-l);
+  /* l'effetto vetro: sfoco quello che sta dietro alla scheda */
+  -webkit-backdrop-filter: var(--sfocatura); backdrop-filter: var(--sfocatura);
+  /* un filo di luce sul bordo in alto + un'ombra morbida sotto */
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2), 0 30px 60px -30px rgba(0, 0, 0, 0.7);
+}
+/* "luce" che segue il mouse: le coordinate --mx/--my le aggiorna animazioni.js */
+.scheda[data-luce]::before {
+  content: '';
+  position: absolute; inset: -1px;
+  border-radius: inherit;
+  background: radial-gradient(380px circle at var(--mx, 50%) var(--my, 0%), rgba(138, 180, 255, 0.2), transparent 60%);
+  /* insieme alla luce compare anche un bagliore azzurro sul bordo */
+  box-shadow: 0 0 0 1px rgba(180, 208, 255, 0.55), 0 0 34px -6px rgba(138, 180, 255, 0.5);
+  opacity: 0;
+  transition: opacity var(--medio) var(--curva);
+  pointer-events: none;
+}
+.scheda[data-luce]:hover::before { opacity: 1; }
+.scheda > * { position: relative; }
+
+/* ---------- BADGE DI STATO ---------- */
+.badge {
+  display: inline-flex; align-items: center; gap: 0.45rem;
+  padding: 0.25rem 0.7rem;
+  font-size: 0.82rem; font-weight: 600; line-height: 1.3;
+  border-radius: 999px;
+  white-space: nowrap;
+}
+.badge::before { content: ''; width: 7px; height: 7px; border-radius: 50%; background: currentColor; }
+.badge-bozza { color: var(--ambra); background: var(--ambra-velo); }
+.badge-pubblicato { color: var(--menta); background: var(--menta-velo); }
+.badge-chiuso { color: var(--cielo); background: var(--cielo-velo); }
+.badge-neutro { color: var(--testo-2); background: rgba(201, 208, 234, 0.12); }
+.badge-neutro::before { display: none; }
+/* il puntino del "pubblicato" pulsa: il questionario e' aperto, sta ricevendo risposte */
+.badge-pubblicato::before { animation: pulsa 2.4s var(--curva) infinite; }
+@keyframes pulsa {
+  0% { box-shadow: 0 0 0 0 rgba(127, 227, 196, 0.55); }
+  70%, 100% { box-shadow: 0 0 0 7px rgba(127, 227, 196, 0); }
+}
+
+/* ---------- TABELLE ---------- */
+.tabella-wrap {
+  overflow-x: auto;
+  border-radius: var(--raggio-l); border: 1px solid var(--linea);
+  background: var(--vetro);
+  -webkit-backdrop-filter: var(--sfocatura); backdrop-filter: var(--sfocatura);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2), 0 30px 60px -30px rgba(0, 0, 0, 0.7);
+}
+.tabella { width: 100%; border-collapse: collapse; }
+.tabella th, .tabella td { padding: 0.95rem 1.25rem; text-align: left; vertical-align: middle; }
+.tabella th {
+  font-size: 0.82rem; font-weight: 600; color: var(--testo-3);
+  border-bottom: 1px solid var(--linea-tenue);
+  white-space: nowrap;
+}
+.tabella td { border-bottom: 1px solid var(--linea-tenue); }
+.tabella tr:last-child td { border-bottom: 0; }
+.tabella tbody tr { transition: background var(--rapido) var(--curva); }
+.tabella tbody tr:hover { background: rgba(255, 255, 255, 0.05); }
+.tabella .destra { text-align: right; }
+.tabella a.titolo-riga { color: var(--testo); font-weight: 600; text-decoration: none; }
+.tabella a.titolo-riga:hover { color: var(--accento); }
+
+/* ---------- AVVISI ---------- */
+.avviso {
+  display: flex; gap: 0.75rem; align-items: flex-start;
+  padding: 0.9rem 1.1rem;
+  border-radius: var(--raggio-m);
+  border: 1px solid var(--linea-tenue);
+  background: var(--vetro);
+  color: var(--testo-2);
+}
+.avviso-errore { color: var(--corallo); background: var(--corallo-velo); border-color: rgba(255, 163, 154, 0.35); }
+.avviso-info { color: var(--cielo); background: var(--cielo-velo); border-color: rgba(163, 196, 255, 0.3); }
+.avviso-ok { color: var(--menta); background: var(--menta-velo); border-color: rgba(127, 227, 196, 0.3); }
+.avviso a { color: inherit; font-weight: 600; }
+
+/* ---------- TOAST (messaggi che compaiono e spariscono da soli) ---------- */
+.toast-area {
+  position: fixed; z-index: 50;
+  right: 1.25rem; bottom: 1.25rem;
+  display: flex; flex-direction: column; gap: 0.6rem;
+  max-width: min(420px, calc(100vw - 2.5rem));
+}
+.toast {
+  display: flex; align-items: center; gap: 0.7rem;
+  padding: 0.85rem 1.1rem;
+  color: var(--testo);
+  background: var(--pieno);
+  border: 1px solid var(--linea);
+  border-left: 3px solid var(--menta);
+  border-radius: var(--raggio-m);
+  box-shadow: 0 18px 40px -18px rgba(0, 0, 0, 0.7);
+  animation: toast-entra var(--lento) var(--curva) both;
+}
+.toast-errore { border-left-color: var(--corallo); }
+.toast.esce { animation: toast-esce var(--medio) var(--curva) both; }
+@keyframes toast-entra { from { opacity: 0; transform: translateY(16px) scale(0.97); } }
+@keyframes toast-esce { to { opacity: 0; transform: translateX(24px); } }
+
+/* ---------- FINESTRA DI CONFERMA (elemento <dialog>) ---------- */
+dialog.conferma {
+  width: min(440px, calc(100vw - 2rem));
+  padding: 1.75rem;
+  color: var(--testo);
+  background: var(--pieno);
+  border: 1px solid var(--linea);
+  border-radius: var(--raggio-l);
+  box-shadow: 0 40px 80px -30px rgba(0, 0, 0, 0.8);
+}
+dialog.conferma::backdrop { background: rgba(5, 8, 22, 0.7); backdrop-filter: blur(4px); }
+dialog.conferma[open] { animation: dialogo-entra var(--medio) var(--curva) both; }
+dialog.conferma[open]::backdrop { animation: sfuma-entra var(--medio) var(--curva) both; }
+dialog.conferma h2 { margin-bottom: 0.6rem; }
+dialog.conferma .azioni { display: flex; justify-content: flex-end; gap: 0.6rem; margin-top: 1.5rem; flex-wrap: wrap; }
+@keyframes dialogo-entra { from { opacity: 0; transform: translateY(14px) scale(0.96); } }
+@keyframes sfuma-entra { from { opacity: 0; } }
+
+/* =====================================================================
+   PEZZI DI PAGINA CONDIVISI
+   Usati sia dal Back Office sia dal portale/app: marchio, testate,
+   elenco delle domande con le opzioni, pagina di accesso.
+   ===================================================================== */
+
+/* marchio: tre opzioni, una selezionata */
+.marchio {
+  display: inline-flex; align-items: center; gap: 0.65rem;
+  margin: 0;
+  font-family: var(--font-titoli);
+  font-size: 1.3rem;
+  font-weight: 700;
+  letter-spacing: -0.025em;
+  color: var(--testo);
+  text-decoration: none;
+}
+.marchio:hover { color: var(--testo); }
+.marchio-segno { color: var(--testo-3); flex: none; }
+.marchio-pieno { fill: var(--accento); transform-origin: 21px 14px; animation: segno-respira 3.6s var(--curva) infinite; }
+@keyframes segno-respira { 50% { transform: scale(0.55); opacity: 0.6; } }
+
+
+.pila { display: flex; flex-direction: column; gap: 1.25rem; }
+.stretto { max-width: 720px; }
+
+.testata { display: flex; align-items: flex-end; justify-content: space-between; gap: 1.25rem; flex-wrap: wrap; }
+.testata > div { display: flex; flex-direction: column; gap: 0.7rem; min-width: 0; }
+.testata-testo { max-width: 68ch; }
+.testata-sezione { align-items: center; }
+.descrizione { max-width: 68ch; }
+
+.indietro {
+  display: inline-flex; align-items: center; gap: 0.5rem;
+  color: var(--testo-2); font-size: 0.9rem; text-decoration: none;
+}
+.indietro::before {
+  content: ''; width: 0.5rem; height: 0.5rem;
+  border-left: 1.5px solid currentColor; border-bottom: 1.5px solid currentColor;
+  transform: rotate(45deg);
+  transition: transform var(--rapido) var(--curva);
+}
+.indietro:hover { color: var(--testo); }
+.indietro:hover::before { transform: translateX(-3px) rotate(45deg); }
+
+.vuoto { display: flex; flex-direction: column; align-items: flex-start; gap: 0.9rem; }
+.vuoto-centrato { min-height: 100vh; justify-content: center; max-width: 520px; margin: 0 auto; padding: 2rem; }
+
+
+/* elenco delle domande */
+.domande { display: flex; flex-direction: column; gap: 0.9rem; margin: 0; padding: 0; list-style: none; }
+.domanda { display: flex; align-items: flex-start; justify-content: space-between; gap: 1.25rem; flex-wrap: wrap; padding: 1.25rem 1.5rem; }
+.domanda-testa { display: flex; gap: 1.1rem; flex: 1 1 320px; min-width: 0; }
+.domanda-numero {
+  flex: none;
+  font-family: var(--font-titoli); font-weight: 600;
+  font-size: 1.5rem; line-height: 1.15;
+  color: var(--testo-3);
+  min-width: 1.6rem;
+}
+.domanda-corpo { display: flex; flex-direction: column; gap: 0.7rem; min-width: 0; }
+.domanda-corpo h3 { overflow-wrap: anywhere; }
+.domanda-meta { display: flex; gap: 0.4rem; flex-wrap: wrap; }
+.domanda-azioni { display: flex; align-items: center; gap: 0.4rem; flex-wrap: wrap; }
+
+/* opzioni: cerchio per la scelta singola, quadrato per la multipla (come nei form veri) */
+.opzioni { display: flex; flex-direction: column; gap: 0.4rem; margin: 0; padding: 0; list-style: none; color: var(--testo-2); }
+.opzioni li { position: relative; padding-left: 1.7rem; overflow-wrap: anywhere; }
+.opzioni li::before {
+  content: '';
+  position: absolute; left: 0; top: 0.3em;
+  width: 0.95rem; height: 0.95rem;
+  border: 1.5px solid var(--testo-3);
+  border-radius: 50%;
+}
+.opzioni-multipla li::before { border-radius: 4px; }
+.opzioni li.scelta { color: var(--testo); font-weight: 600; }
+.opzioni li.scelta::before { border-color: var(--accento); background: var(--accento); box-shadow: inset 0 0 0 3px var(--pieno); }
+.opzioni li.non-scelta { color: var(--testo-3); }
+
+.risposta-testo {
+  margin: 0; padding: 0.2rem 0 0.2rem 1rem;
+  border-left: 2px solid var(--accento);
+  font-family: var(--font-titoli); font-size: 1.1rem; line-height: 1.5;
+  overflow-wrap: anywhere;
+}
+
+
+/* link "salta al contenuto": compare solo navigando con la tastiera */
+.salta {
+  position: absolute; left: 1rem; top: -4rem; z-index: 100;
+  padding: 0.6rem 1rem;
+  color: var(--su-accento); background: var(--accento);
+  border-radius: var(--raggio-s);
+  transition: top var(--rapido) var(--curva);
+}
+.salta:focus { top: 1rem; }
+
+.gruppo-btn { display: flex; align-items: center; gap: 0.6rem; flex-wrap: wrap; }
+
+/* messaggi e pulsanti dei form */
+.errore-campo { color: var(--corallo); font-size: 0.9rem; }
+[aria-invalid="true"] { border-color: var(--corallo) !important; }
+.azioni-form { display: flex; gap: 0.6rem; flex-wrap: wrap; padding-top: 0.5rem; }
+.btn-largo { width: 100%; }
+
+/* ---------- pagina di accesso ---------- */
+body.bo-accesso, body.pagina-accesso { background: var(--fondo-scuro); }
+.accesso { display: grid; grid-template-columns: minmax(0, 1.15fr) minmax(360px, 1fr); min-height: 100vh; }
+
+/* niente sfondo: dietro si deve vedere l'aurora */
+.accesso-scena { position: relative; overflow: hidden; border-right: 1px solid var(--linea-tenue); }
+.accesso-scena canvas { position: absolute; inset: 0; width: 100%; height: 100%; }
+.accesso-scena::after {
+  /* alone di luce che si sposta lentamente dietro la scritta */
+  content: '';
+  position: absolute; left: -10%; bottom: -30%;
+  width: 70%; aspect-ratio: 1;
+  background: radial-gradient(circle, rgba(199, 178, 255, 0.22), transparent 65%);
+  animation: alone 14s ease-in-out infinite alternate;
+  pointer-events: none;
+}
+@keyframes alone { to { transform: translate(35%, -25%) scale(1.25); } }
+.accesso-scena-testo {
+  position: absolute; z-index: 1; left: 0; right: 0; bottom: 0;
+  padding: clamp(2rem, 5vw, 4.5rem);
+  background: linear-gradient(to top, rgba(7, 11, 28, 0.9) 35%, transparent);
+}
+.accesso-frase {
+  max-width: 14ch;
+  font-family: var(--font-titoli);
+  font-size: clamp(2.4rem, 1rem + 4.2vw, 4.6rem);
+  font-weight: 600; line-height: 1.05; letter-spacing: -0.035em;
+}
+
+.accesso-pannello { display: flex; align-items: center; justify-content: center; padding: 2rem; }
+/* il form di accesso e' una scheda di vetro */
+.accesso-form {
+  width: 100%; max-width: 430px;
+  display: flex; flex-direction: column; gap: 1.75rem;
+  padding: clamp(1.5rem, 4vw, 2.25rem);
+  background: var(--vetro);
+  border: 1px solid var(--linea);
+  border-radius: var(--raggio-l);
+  -webkit-backdrop-filter: var(--sfocatura); backdrop-filter: var(--sfocatura);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2), 0 30px 60px -30px rgba(0, 0, 0, 0.7);
+}
+.accesso-form h1 { font-size: 1.9rem; margin-bottom: 0.4rem; }
+
+
+@media (max-width: 900px) {
+  .marchio { font-size: 1.15rem; }
+  .accesso { grid-template-columns: 1fr; }
+  .accesso-scena { min-height: 34vh; border-right: 0; border-bottom: 1px solid var(--linea-tenue); }
+  .accesso-pannello { align-items: flex-start; padding-top: 2.5rem; }
+}
+
+/* ---------- ANIMAZIONI DI INGRESSO ----------
+   Gli elementi con data-anima partono invisibili e animazioni.js li fa comparire
+   quando entrano nello schermo, uno dopo l'altro (come le "entrance animation"
+   dei page builder). La classe .js sull'html la mette lo script: se JavaScript
+   non parte, niente resta nascosto. */
+.js [data-anima] {
+  opacity: 0;
+  transform: translateY(22px);
+  filter: blur(6px);
+  transition: opacity var(--lento) var(--curva), transform var(--lento) var(--curva), filter var(--lento) var(--curva);
+  transition-delay: var(--ritardo, 0ms);
+  will-change: opacity, transform;
+}
+.js [data-anima="sinistra"] { transform: translateX(-26px); }
+.js [data-anima="scala"] { transform: scale(0.94); }
+.js [data-anima="sfuma"] { transform: none; }
+.js [data-anima].visibile { opacity: 1; transform: none; filter: none; }
+
+/* titoli che "salgono" parola per parola da dietro una maschera */
+.js [data-titolo] .parola { display: inline-block; overflow: hidden; vertical-align: bottom; padding-bottom: 0.12em; margin-bottom: -0.12em; }
+.js [data-titolo] .parola > span {
+  display: inline-block;
+  transform: translateY(105%);
+  transition: transform 900ms var(--curva);
+  transition-delay: var(--ritardo, 0ms);
+}
+.js [data-titolo].visibile .parola > span { transform: none; }
+
+/* passaggio morbido da una pagina all'altra (nei browser che lo supportano) */
+@view-transition { navigation: auto; }
+::view-transition-old(root) { animation: 180ms var(--curva) both pagina-esce; }
+::view-transition-new(root) { animation: 320ms var(--curva) both pagina-entra; }
+@keyframes pagina-esce { to { opacity: 0; } }
+@keyframes pagina-entra { from { opacity: 0; } }
+
+/* ---------- COSTELLAZIONE (decorazione animata, disegnata su <canvas>) ---------- */
+canvas[data-costellazione] { display: block; }
+
+/* ---------- telefoni ----------
+   La sfocatura e' pesante per i telefoni (e per la batteria): sugli schermi
+   stretti il vetro resta, ma senza blur e un po' piu coprente. */
+@media (max-width: 640px) {
+  .scheda, .tabella-wrap, .btn, .accesso-form { -webkit-backdrop-filter: none; backdrop-filter: none; }
+  .scheda, .tabella-wrap, .accesso-form { background: rgba(27, 36, 68, 0.78); }
+}
+
+/* ---------- chi ha chiesto "meno movimento" nel sistema non vede animazioni ---------- */
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after { animation-duration: 1ms !important; animation-iteration-count: 1 !important; transition-duration: 1ms !important; transition-delay: 0ms !important; }
+  .js [data-anima], .js [data-titolo] .parola > span { opacity: 1; transform: none; filter: none; }
+  @view-transition { navigation: none; }
+}

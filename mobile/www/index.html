@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="utf-8">
+    <!-- Content-Security-Policy: la pagina carica script e stili solo dai suoi file
+         e puo chiamare (connect-src) soltanto le API. -->
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self' data: https://ssl.gstatic.com; img-src 'self' data:; connect-src 'self' http://10.0.2.2:8080">
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+    <meta name="format-detection" content="telephone=no">
+    <title>Accesso | Questionari</title>
+    <link rel="icon" href="stile/favicon.svg" type="image/svg+xml">
+    <link rel="stylesheet" href="stile/css/stile.css">
+    <link rel="stylesheet" href="css/portale.css">
+</head>
+<body class="pagina-accesso">
+    <div class="accesso">
+        <!-- meta' sinistra: la "scena" con la decorazione animata -->
+        <section class="accesso-scena" aria-hidden="true">
+            <canvas data-costellazione></canvas>
+            <div class="accesso-scena-testo">
+                <p class="accesso-frase" data-titolo>La tua opinione, in pochi minuti.</p>
+            </div>
+        </section>
+
+        <!-- meta' destra: il form -->
+        <main class="accesso-pannello">
+            <div class="accesso-form" data-anima-gruppo>
+                <p class="marchio" data-anima>
+                    <svg class="marchio-segno" viewBox="0 0 28 28" width="28" height="28" aria-hidden="true">
+                        <circle cx="7" cy="7" r="4.25" fill="none" stroke="currentColor" stroke-width="1.5"/>
+                        <circle cx="7" cy="21" r="4.25" fill="none" stroke="currentColor" stroke-width="1.5"/>
+                        <circle cx="21" cy="14" r="4.25" fill="none" stroke="currentColor" stroke-width="1.5"/>
+                        <circle class="marchio-pieno" cx="21" cy="14" r="2.1"/>
+                    </svg>
+                    <span>Questionari</span>
+                </p>
+
+                <div data-anima>
+                    <h1>Accedi</h1>
+                    <p class="tenue">Entra con le tue credenziali per compilare i questionari.</p>
+                </div>
+
+                <p id="errore" class="avviso avviso-errore" role="alert" hidden></p>
+
+                <form id="form-login" class="pila" novalidate>
+                    <div class="campo" data-anima>
+                        <label for="username">Username</label>
+                        <input type="text" id="username" name="username" autocomplete="username"
+                               autocapitalize="none" spellcheck="false" required>
+                    </div>
+                    <div class="campo" data-anima>
+                        <label for="password">Password</label>
+                        <input type="password" id="password" name="password" autocomplete="current-password" required>
+                    </div>
+                    <div data-anima>
+                        <button type="submit" class="btn btn-primario btn-largo" id="btn-accedi">Accedi</button>
+                    </div>
+                </form>
+            </div>
+        </main>
+    </div>
+
+    <script src="cordova.js"></script>
+    <script src="js/config.js"></script>
+    <script src="js/utili.js"></script>
+    <script src="js/api.js"></script>
+    <script src="js/layout.js"></script>
+    <script src="stile/js/animazioni.js"></script>
+    <script src="js/login.js"></script>
+</body>
+</html>

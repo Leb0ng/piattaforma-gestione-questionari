@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="utf-8">
+    <!-- Content-Security-Policy: la pagina carica script e stili solo dai suoi file
+         e puo chiamare (connect-src) soltanto le API. -->
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; img-src 'self' data:; connect-src 'self' http://localhost:8080">
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+    <meta name="format-detection" content="telephone=no">
+    <title>Compila | Questionari</title>
+    <link rel="icon" href="../stile/favicon.svg" type="image/svg+xml">
+    <link rel="stylesheet" href="../stile/css/stile.css">
+    <link rel="stylesheet" href="css/portale.css">
+</head>
+<body class="portale">
+    <a class="salta" href="#contenuto">Vai al contenuto</a>
+    <!-- testata e menu: li costruisce js/layout.js, uguali in tutte le pagine -->
+    <header id="testata" class="p-testata"></header>
+
+    <main id="contenuto" class="p-main">
+        <canvas class="p-decoro" data-costellazione aria-hidden="true"></canvas>
+        <div class="p-colonna">
+            <p data-anima="sfuma"><a class="indietro" href="questionari.html">Torna ai questionari</a></p>
+
+            <div class="testata">
+                <div class="testata-testo">
+                    <h1 id="titolo">Carico il questionario…</h1>
+                    <p id="descrizione" class="descrizione tenue"></p>
+                </div>
+            </div>
+
+            <p id="errore" class="avviso avviso-errore" role="alert" hidden></p>
+
+            <!-- barra che mostra a quante domande si e' risposto -->
+            <div id="avanzamento" class="avanzamento" hidden>
+                <div class="avanzamento-barra"><i id="avanzamento-pieno"></i></div>
+                <p class="piccolo tenue numeri" id="avanzamento-testo"></p>
+            </div>
+
+            <!-- le domande le inserisce js/compila.js; data-conferma fa chiedere conferma prima dell'invio -->
+            <form id="form-compila" class="pila" novalidate hidden
+                  data-conferma="Dopo l'invio le risposte non si possono più modificare e il questionario non si può compilare una seconda volta."
+                  data-conferma-titolo="Inviare le risposte?" data-conferma-azione="Invia">
+                <ol id="domande" class="domande"></ol>
+                <div class="azioni-form">
+                    <button type="submit" class="btn btn-primario" id="btn-invia">Invia le risposte</button>
+                    <a class="btn" href="questionari.html">Annulla</a>
+                </div>
+            </form>
+
+            <!-- compare al posto del form dopo il salvataggio -->
+            <section id="fatto" class="scheda fatto" hidden>
+                <svg class="spunta" viewBox="0 0 64 64" width="64" height="64" aria-hidden="true">
+                    <circle cx="32" cy="32" r="28"/>
+                    <path d="M20 33l8 8 16-17"/>
+                </svg>
+                <h2>Risposte salvate</h2>
+                <p class="tenue" id="fatto-testo"></p>
+                <div class="gruppo-btn">
+                    <a class="btn btn-primario" id="fatto-rivedi" href="storico.html">Rivedi le tue risposte</a>
+                    <a class="btn" href="questionari.html">Torna ai questionari</a>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <!-- piede: lo costruisce js/layout.js -->
+    <footer id="piede" class="p-piede piccolo tenue"></footer>
+
+    <!--CORDOVA-->
+    <script src="js/config.js"></script>
+    <script src="js/utili.js"></script>
+    <script src="js/api.js"></script>
+    <script src="js/layout.js"></script>
+    <script src="../stile/js/animazioni.js"></script>
+    <script src="js/compila.js"></script>
+</body>
+</html>

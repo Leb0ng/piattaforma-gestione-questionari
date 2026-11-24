@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="utf-8">
+    <!-- Content-Security-Policy: la pagina carica script e stili solo dai suoi file
+         e puo chiamare (connect-src) soltanto le API. -->
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self' data: https://ssl.gstatic.com; img-src 'self' data:; connect-src 'self' http://10.0.2.2:8080">
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+    <meta name="format-detection" content="telephone=no">
+    <title>Le mie risposte | Questionari</title>
+    <link rel="icon" href="stile/favicon.svg" type="image/svg+xml">
+    <link rel="stylesheet" href="stile/css/stile.css">
+    <link rel="stylesheet" href="css/portale.css">
+</head>
+<body class="portale">
+    <a class="salta" href="#contenuto">Vai al contenuto</a>
+    <!-- testata e menu: li costruisce js/layout.js, uguali in tutte le pagine -->
+    <header id="testata" class="p-testata"></header>
+
+    <main id="contenuto" class="p-main">
+        <canvas class="p-decoro" data-costellazione aria-hidden="true"></canvas>
+        <div class="p-colonna">
+            <div class="testata">
+                <div>
+                    <h1 data-titolo>Le mie risposte</h1>
+                    <p class="tenue" data-anima>I questionari che hai già compilato. Le risposte inviate si possono rileggere, non modificare.</p>
+                </div>
+            </div>
+
+            <!-- qui js/storico.js inserisce le compilazioni ricevute dalle API -->
+            <div id="elenco" class="pila" aria-live="polite">
+                <p class="tenue">Carico le tue compilazioni…</p>
+            </div>
+        </div>
+    </main>
+
+    <!-- piede: lo costruisce js/layout.js -->
+    <footer id="piede" class="p-piede piccolo tenue"></footer>
+
+    <script src="cordova.js"></script>
+    <script src="js/config.js"></script>
+    <script src="js/utili.js"></script>
+    <script src="js/api.js"></script>
+    <script src="js/layout.js"></script>
+    <script src="stile/js/animazioni.js"></script>
+    <script src="js/storico.js"></script>
+</body>
+</html>

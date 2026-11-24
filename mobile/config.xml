@@ -1,0 +1,36 @@
+<?xml version='1.0' encoding='utf-8'?>
+<widget id="it.leonsciurti.questionari" version="1.0.0"
+        xmlns="http://www.w3.org/ns/widgets"
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:cdv="http://cordova.apache.org/ns/1.0">
+    <name>Questionari</name>
+    <description>
+        App mobile del project work: compilazione dei questionari online.
+    </description>
+    <author>Leon Sciurti</author>
+    <content src="index.html" />
+
+    <!-- Prima di ogni preparazione/compilazione ricostruisco www/ partendo dal portale web
+         (cartelle ../client e ../stile): app e portale sono lo stesso codice. -->
+    <hook type="before_prepare" src="scripts/sincronizza.js" />
+
+    <!-- l'app puo fare richieste di rete verso le API (quali indirizzi di preciso
+         lo decide la Content-Security-Policy dentro le pagine html) -->
+    <access origin="*" />
+    <allow-intent href="http://*/*" />
+    <allow-intent href="https://*/*" />
+
+    <platform name="android">
+        <!-- Di default l'app verrebbe servita su https://localhost e da una pagina https
+             il browser interno blocca le chiamate a un server http ("mixed content").
+             Le API in locale sono in http, quindi servo anche l'app in http. -->
+        <preference name="scheme" value="http" />
+        <preference name="hostname" value="localhost" />
+
+        <!-- Android da solo blocca il traffico http non cifrato: qui lo autorizzo.
+             Va bene per lo sviluppo in locale, in produzione le API sarebbero in https. -->
+        <edit-config file="app/src/main/AndroidManifest.xml" mode="merge" target="/manifest/application">
+            <application android:usesCleartextTraffic="true" />
+        </edit-config>
+    </platform>
+</widget>

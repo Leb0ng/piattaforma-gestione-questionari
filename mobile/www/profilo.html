@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="utf-8">
+    <!-- Content-Security-Policy: la pagina carica script e stili solo dai suoi file
+         e puo chiamare (connect-src) soltanto le API. -->
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self' data: https://ssl.gstatic.com; img-src 'self' data:; connect-src 'self' http://10.0.2.2:8080">
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+    <meta name="format-detection" content="telephone=no">
+    <title>Profilo | Questionari</title>
+    <link rel="icon" href="stile/favicon.svg" type="image/svg+xml">
+    <link rel="stylesheet" href="stile/css/stile.css">
+    <link rel="stylesheet" href="css/portale.css">
+</head>
+<body class="portale">
+    <a class="salta" href="#contenuto">Vai al contenuto</a>
+    <!-- testata e menu: li costruisce js/layout.js, uguali in tutte le pagine -->
+    <header id="testata" class="p-testata"></header>
+
+    <main id="contenuto" class="p-main">
+        <canvas class="p-decoro" data-costellazione aria-hidden="true"></canvas>
+        <div class="p-colonna">
+            <div class="testata">
+                <div>
+                    <h1 data-titolo>Il tuo profilo</h1>
+                    <p class="tenue" data-anima id="sottotitolo">Alcuni questionari sono rivolti solo a certe persone: questi dati servono a mostrarti quelli adatti a te.</p>
+                </div>
+            </div>
+
+            <!-- compare quando si arriva qui dal primo accesso con il profilo incompleto -->
+            <p id="benvenuto" class="avviso avviso-info" hidden>
+                Prima di iniziare completa il tuo profilo: bastano quattro risposte.
+            </p>
+            <p id="errore" class="avviso avviso-errore" role="alert" hidden></p>
+            <p id="salvato" class="avviso avviso-ok" role="status" hidden>Profilo salvato.</p>
+
+            <!-- i campi li riempie js/profilo.js con i dati ricevuti dalle API -->
+            <form id="form-profilo" class="scheda pila" novalidate hidden>
+                <p class="piccolo tenue" id="chi"></p>
+
+                <div class="campo">
+                    <label for="sesso">Sesso</label>
+                    <select id="sesso" name="sesso" required>
+                        <option value="">Scegli…</option>
+                        <option value="UOMO">Uomo</option>
+                        <option value="DONNA">Donna</option>
+                        <option value="ALTRO">Altro</option>
+                    </select>
+                </div>
+
+                <div class="campo">
+                    <label for="data-nascita">Data di nascita</label>
+                    <input type="date" id="data-nascita" name="dataNascita" required aria-describedby="aiuto-nascita">
+                    <p class="aiuto" id="aiuto-nascita">Usata solo per calcolare la tua fascia d'età.</p>
+                </div>
+
+                <div class="campo">
+                    <label for="area">Area geografica</label>
+                    <select id="area" name="areaGeografica" required>
+                        <option value="">Scegli…</option>
+                        <option value="NORD">Nord</option>
+                        <option value="CENTRO">Centro</option>
+                        <option value="SUD_ISOLE">Sud e isole</option>
+                    </select>
+                </div>
+
+                <div class="campo">
+                    <label for="occupazione">Condizione lavorativa</label>
+                    <select id="occupazione" name="occupazione" required>
+                        <option value="">Scegli…</option>
+                        <option value="STUDENTE">Studente</option>
+                        <option value="LAVORATORE">Lavoratore</option>
+                        <option value="DISOCCUPATO">Disoccupato</option>
+                        <option value="PENSIONATO">Pensionato</option>
+                    </select>
+                </div>
+
+                <div class="azioni-form">
+                    <button type="submit" class="btn btn-primario" id="btn-salva">Salva il profilo</button>
+                </div>
+            </form>
+        </div>
+    </main>
+
+    <!-- piede: lo costruisce js/layout.js -->
+    <footer id="piede" class="p-piede piccolo tenue"></footer>
+
+    <script src="cordova.js"></script>
+    <script src="js/config.js"></script>
+    <script src="js/utili.js"></script>
+    <script src="js/api.js"></script>
+    <script src="js/layout.js"></script>
+    <script src="stile/js/animazioni.js"></script>
+    <script src="js/profilo.js"></script>
+</body>
+</html>

@@ -1,0 +1,23 @@
+{
+  "name": "it.leonsciurti.questionari",
+  "displayName": "Questionari",
+  "version": "1.0.0",
+  "description": "App mobile del project work: compilazione dei questionari online.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "ecosystem:cordova"
+  ],
+  "author": "Leon Sciurti",
+  "license": "Apache-2.0",
+  "devDependencies": {
+    "cordova-android": "^15.1.0"
+  },
+  "cordova": {
+    "platforms": [
+      "android"
+    ]
+  }
+}

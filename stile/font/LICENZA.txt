@@ -1,0 +1,8 @@
+Font incluso nel progetto (file .woff2 in questa cartella)
+
+- Plus Jakarta Sans   Copyright The Plus Jakarta Sans Project Authors
+
+E' distribuito con licenza SIL Open Font License 1.1
+(https://openfontlicense.org), che ne permette l'uso e la redistribuzione
+anche all'interno di un software. File preso dal pacchetto npm
+@fontsource-variable/plus-jakarta-sans.

@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="utf-8">
+    <!-- Content-Security-Policy: la pagina carica script e stili solo dai suoi file
+         e puo chiamare (connect-src) soltanto le API. -->
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; img-src 'self' data:; connect-src 'self' http://localhost:8080">
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+    <meta name="format-detection" content="telephone=no">
+    <title>Risposte inviate | Questionari</title>
+    <link rel="icon" href="../stile/favicon.svg" type="image/svg+xml">
+    <link rel="stylesheet" href="../stile/css/stile.css">
+    <link rel="stylesheet" href="css/portale.css">
+</head>
+<body class="portale">
+    <a class="salta" href="#contenuto">Vai al contenuto</a>
+    <!-- testata e menu: li costruisce js/layout.js, uguali in tutte le pagine -->
+    <header id="testata" class="p-testata"></header>
+
+    <main id="contenuto" class="p-main">
+        <canvas class="p-decoro" data-costellazione aria-hidden="true"></canvas>
+        <div class="p-colonna">
+            <p data-anima="sfuma"><a class="indietro" href="storico.html">Torna alle mie risposte</a></p>
+
+            <div class="testata">
+                <div class="testata-testo">
+                    <p id="etichette" class="domanda-meta"></p>
+                    <h1 id="titolo">Carico le risposte…</h1>
+                    <p id="descrizione" class="descrizione tenue"></p>
+                </div>
+            </div>
+
+            <p id="errore" class="avviso avviso-errore" role="alert" hidden></p>
+            <p id="sola-lettura" class="avviso avviso-info" hidden>Sola lettura: le risposte inviate non si possono modificare.</p>
+
+            <!-- le risposte le inserisce js/risposte.js -->
+            <ol id="domande" class="domande"></ol>
+        </div>
+    </main>
+
+    <!-- piede: lo costruisce js/layout.js -->
+    <footer id="piede" class="p-piede piccolo tenue"></footer>
+
+    <!--CORDOVA-->
+    <script src="js/config.js"></script>
+    <script src="js/utili.js"></script>
+    <script src="js/api.js"></script>
+    <script src="js/layout.js"></script>
+    <script src="../stile/js/animazioni.js"></script>
+    <script src="js/risposte.js"></script>
+</body>
+</html>
